@@ -28,13 +28,21 @@ FROM (
 WHERE rn <= 500;
 
 INSERT INTO account (account_id, customer_id, product_id, daily_limit, opened_at)
-SELECT lvl,
-       MOD(lvl - 1, 500) + 1,
-       MOD(lvl - 1, 3) + 1,
-       -- Demo tiers for nudge logic by modulo cohort: Mass=2k, Prime=5k, Affluent=10k.
-       CASE MOD(lvl, 3) WHEN 0 THEN 2000 WHEN 1 THEN 5000 ELSE 10000 END,
-       TRUNC(SYSDATE) - MOD(lvl, 900)
-FROM (SELECT LEVEL lvl FROM dual CONNECT BY LEVEL <= 800);
+SELECT seed.lvl,
+       seed.customer_id,
+       seed.product_id,
+       -- Demo tiers aligned to customer segment: Mass=2k, Prime=5k, Affluent=10k.
+       CASE c.segment WHEN 'Mass' THEN 2000 WHEN 'Prime' THEN 5000 ELSE 10000 END,
+       TRUNC(SYSDATE) - MOD(seed.lvl, 900)
+FROM (
+  SELECT LEVEL lvl,
+         MOD(LEVEL - 1, 500) + 1 AS customer_id,
+         MOD(LEVEL - 1, 3) + 1 AS product_id
+  FROM dual
+  CONNECT BY LEVEL <= 800
+) seed
+JOIN customer c
+  ON c.customer_id = seed.customer_id;
 
 INSERT INTO txn (txn_id, account_id, amount, status, decline_reason, txn_ts)
 SELECT rn,
