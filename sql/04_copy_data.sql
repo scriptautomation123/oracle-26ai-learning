@@ -3,6 +3,8 @@
 -- Prerequisite: Run after 02_staging_ddl.sql. Requires uploaded files in OCI Object Storage.
 
 BEGIN
+  -- Replace with OCI user/tenancy details and an Auth Token from OCI Console:
+  -- Identity & Security -> Users -> <user> -> Auth tokens.
   DBMS_CLOUD.CREATE_CREDENTIAL(
     credential_name => 'OBJ_STORE_CRED',
     username        => '<OCI_USER_OR_TENANCY>',
