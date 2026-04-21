@@ -32,7 +32,12 @@ SELECT seed.lvl,
        seed.customer_id,
        seed.product_id,
        -- Demo tiers aligned to customer segment: Mass=2k, Prime=5k, Affluent=10k.
-       CASE c.segment WHEN 'Mass' THEN 2000 WHEN 'Prime' THEN 5000 ELSE 10000 END,
+       CASE c.segment
+         WHEN 'Mass' THEN 2000
+         WHEN 'Prime' THEN 5000
+         WHEN 'Affluent' THEN 10000
+         ELSE 2000
+       END,
        TRUNC(SYSDATE) - MOD(seed.lvl, 900)
 FROM (
   SELECT LEVEL lvl,
