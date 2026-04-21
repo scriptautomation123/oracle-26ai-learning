@@ -1,6 +1,6 @@
 -- 01_schema.sql
 -- Purpose: Create core POC relational schema with BLOB/CLOB/JSON/VECTOR columns.
--- Prerequisite: Run first on an empty or dedicated Oracle Autonomous Database 23ai/26ai schema.
+-- Prerequisite: Run first on an empty or dedicated Oracle Autonomous Database 26ai Free Tier schema.
 
 CREATE TABLE customer (
   customer_id    NUMBER PRIMARY KEY,

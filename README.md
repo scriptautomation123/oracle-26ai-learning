@@ -2,7 +2,7 @@
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-This repository contains a runnable Oracle Autonomous Database 23ai/26ai (Always Free) Proof-of-Concept for proactive banking nudges that combines relational data, BLOB/CLOB content, AI Vector Search, Property Graph (SQL/PGQ), Select AI, MCP integration, and an APEX chat front end across three use cases: credit-card page view nudges, abandoned-application nudges, and declined-transaction nudges.
+This repository contains a runnable Oracle Autonomous Database 26ai Free Tier Proof-of-Concept for proactive banking nudges that combines relational data, BLOB/CLOB content, AI Vector Search, Property Graph (SQL/PGQ), Select AI, MCP integration, and an APEX chat front end across three use cases: credit-card page view nudges, abandoned-application nudges, and declined-transaction nudges.
 
 ## Architecture
 
@@ -11,7 +11,7 @@ flowchart LR
     Browser[Browser / Banker UI]
     APEX[APEX Chat Page]
     MCP[MCP Server via SQLcl -mcp]
-    ADB[(Oracle Autonomous DB 23ai/26ai)]
+    ADB[(Oracle Autonomous DB 26ai Free Tier)]
     V[Vector Search + ONNX Embeddings]
     G[Property Graph SQL/PGQ]
     S[Select AI Profile NUDGE_BOT]
@@ -117,7 +117,7 @@ oracle-26ai-learning/
 
 ## Cost Guardrails
 
-- Use Oracle Autonomous Database Always Free shape only.
+- Use Oracle Autonomous Database 26ai Free Tier resources only.
 - Keep storage and object uploads within free quotas.
 - If OCI GenAI is enabled for Select AI, set an OCI budget alert at **$5**.
 

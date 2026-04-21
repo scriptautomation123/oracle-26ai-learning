@@ -1,6 +1,6 @@
 # 10–15 Minute Demo Script (UC1/UC2/UC3)
 
-1. Open Database Actions SQL Worksheet in ADB 23ai/26ai.
+1. Open Database Actions SQL Worksheet in ADB 26ai Free Tier.
 2. Run schema/setup SQL in order `01 -> 08`.
 3. Confirm row counts:
    ```sql
@@ -29,4 +29,4 @@
 11. Run `sql/11_uc3_declined_txn.sql` and show Select AI generated nudge.
 12. Open APEX page/procedure (`apex/nudge_chat_app.sql`) and run a sample request.
 13. Optional: start SQLcl MCP server and show agent prompt calling DB tools.
-14. Close with cost guardrails and Always Free scope.
+14. Close with cost guardrails and Free Tier scope.
