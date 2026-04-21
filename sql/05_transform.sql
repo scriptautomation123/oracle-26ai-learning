@@ -31,7 +31,7 @@ INSERT INTO account (account_id, customer_id, product_id, daily_limit, opened_at
 SELECT seed.lvl,
        seed.customer_id,
        seed.product_id,
-       -- Demo tiers aligned to customer segment: Mass=2k, Prime=5k, Affluent=10k.
+       -- Demo tiers aligned to customer segment: Mass=2000, Prime=5000, Affluent=10000.
        CASE c.segment
          WHEN 'Mass' THEN 2000
          WHEN 'Prime' THEN 5000
