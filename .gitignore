@@ -1,0 +1,15 @@
+# Local data and secrets
+*.csv
+data/
+kaggle.json
+wallet*.zip
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
