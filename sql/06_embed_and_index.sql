@@ -4,6 +4,7 @@
 
 INSERT INTO conversation_chunk (conv_id, chunk_text, embedding)
 SELECT c.conv_id,
+       -- 3500 chars keeps each chunk under VARCHAR2(4000) and leaves headroom for metadata/punctuation.
        SUBSTR(c.transcript, 1, 3500),
        VECTOR_EMBEDDING(MINILM_EMB USING SUBSTR(c.transcript, 1, 3500) AS DATA)
 FROM conversation c;
