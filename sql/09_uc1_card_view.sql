@@ -29,12 +29,18 @@ peer_products AS (
 )
 SELECT pp.peer_product_name,
        cc.chunk_text,
-       VECTOR_DISTANCE(
-         cc.embedding,
-         VECTOR_EMBEDDING(MINILM_EMB USING 'credit card comparison help' AS DATA),
-         COSINE
-       ) AS distance
+       cc.distance
 FROM peer_products pp
-JOIN conversation_chunk cc ON 1 = 1
+CROSS APPLY (
+  SELECT chunk_text,
+         VECTOR_DISTANCE(
+           embedding,
+           VECTOR_EMBEDDING(MINILM_EMB USING 'credit card comparison help' AS DATA),
+           COSINE
+         ) AS distance
+  FROM conversation_chunk
+  ORDER BY distance
+  FETCH FIRST 1 ROW ONLY
+) cc
 ORDER BY distance
 FETCH FIRST 5 ROWS ONLY;

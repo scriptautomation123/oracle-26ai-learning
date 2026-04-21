@@ -3,6 +3,7 @@
 -- Run order: 5
 -- Dependencies: sql/01_schema.sql, sql/02_staging_ddl.sql, sql/04_copy_data.sql
 
+-- Product ID mapping used below: 1=CREDIT_CARD, 2=LOAN, 3=DEPOSIT.
 INSERT INTO product (product_id, name, family, details_blob, details_text)
 VALUES (1, 'Cash+ Visa', 'CREDIT_CARD', EMPTY_BLOB(), 'Everyday cashback credit card for digital spend.');
 
@@ -23,8 +24,8 @@ SELECT customer_id,
        END,
        TRUNC(SYSDATE) - MOD(customer_id, 365)
 FROM (
-  SELECT ROW_NUMBER() OVER (ORDER BY nameorig) AS customer_id, nameorig
-  FROM (SELECT DISTINCT nameorig FROM stg_paysim)
+  SELECT ROW_NUMBER() OVER (ORDER BY name_orig) AS customer_id, name_orig
+  FROM (SELECT DISTINCT name_orig FROM stg_paysim)
   FETCH FIRST 500 ROWS ONLY
 );
 
@@ -41,13 +42,13 @@ FROM (
 );
 
 INSERT INTO txn (txn_id, account_id, amount, status, decline_reason, txn_ts)
-SELECT ROW_NUMBER() OVER (ORDER BY step, nameorig, namedest) AS txn_id,
-       MOD(ROW_NUMBER() OVER (ORDER BY step, nameorig, namedest) - 1, 800) + 1 AS account_id,
+SELECT ROW_NUMBER() OVER (ORDER BY step, name_orig, name_dest) AS txn_id,
+       MOD(ROW_NUMBER() OVER (ORDER BY step, name_orig, name_dest) - 1, 800) + 1 AS account_id,
        amount,
-       CASE WHEN isfraud = 1 OR isflaggedfraud = 1 THEN 'DECLINED' ELSE 'APPROVED' END AS status,
+       CASE WHEN is_fraud = 1 OR is_flagged_fraud = 1 THEN 'DECLINED' ELSE 'APPROVED' END AS status,
        CASE
-         WHEN isfraud = 1 THEN 'SUSPECTED_FRAUD'
-         WHEN isflaggedfraud = 1 THEN 'LIMIT_EXCEEDED'
+         WHEN is_fraud = 1 THEN 'SUSPECTED_FRAUD'
+         WHEN is_flagged_fraud = 1 THEN 'LIMIT_EXCEEDED'
          ELSE NULL
        END AS decline_reason,
        SYSTIMESTAMP - NUMTODSINTERVAL(step, 'MINUTE')

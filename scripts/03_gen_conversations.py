@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import os
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -51,7 +52,8 @@ def generate_transcript(client: OpenAI, model: str, utterance: str, intent: str)
         if not content:
             raise ValueError("empty response")
         return content.strip()
-    except Exception:
+    except Exception as exc:
+        print(f"LLM call failed, using fallback transcript: {exc}", file=sys.stderr)
         return (
             f"Customer: {utterance}\n"
             "Agent: I can help with that right now; let me pull up your account context.\n"

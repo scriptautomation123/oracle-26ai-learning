@@ -7,14 +7,14 @@ CREATE TABLE stg_paysim (
   step              NUMBER,
   type              VARCHAR2(30),
   amount            NUMBER,
-  nameOrig          VARCHAR2(100),
-  oldbalanceOrg     NUMBER,
-  newbalanceOrig    NUMBER,
-  nameDest          VARCHAR2(100),
-  oldbalanceDest    NUMBER,
-  newbalanceDest    NUMBER,
-  isFraud           NUMBER,
-  isFlaggedFraud    NUMBER
+  name_orig         VARCHAR2(100),
+  old_balance_org   NUMBER,
+  new_balance_orig  NUMBER,
+  name_dest         VARCHAR2(100),
+  old_balance_dest  NUMBER,
+  new_balance_dest  NUMBER,
+  is_fraud          NUMBER,
+  is_flagged_fraud  NUMBER
 );
 
 CREATE TABLE stg_lending (
