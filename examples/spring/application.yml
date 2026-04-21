@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@nudge_high?TNS_ADMIN=/etc/wallet
+    username: nudge_app
+    password: ${NUDGE_DB_PASSWORD}
+    hikari:
+      connection-init-sql: "BEGIN DBMS_CLOUD_AI.SET_PROFILE('NUDGE_BOT'); END;"
+      maximum-pool-size: 10

@@ -1,0 +1,13 @@
+{
+  "//": "Claude Desktop MCP client configuration for the SQLcl -mcp server.",
+  "mcpServers": {
+    "oracle-adb-nudges": {
+      "command": "sql",
+      "args": ["-mcp"],
+      "env": {
+        "TNS_ADMIN": "/absolute/path/to/wallet_NudgeDB",
+        "JAVA_HOME": "/absolute/path/to/jdk-17"
+      }
+    }
+  }
+}
