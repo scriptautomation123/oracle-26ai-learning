@@ -44,6 +44,38 @@ BEGIN
 END;
 /
 
+-- lab_optional: for recommended/governance objects that the training tells
+-- the team to add but the demo schema does not ship. If the object exists in
+-- the schema, run the structural assertion (PASS/FAIL). If it does not, log
+-- a MANUAL item with the evidence-required note so it shows up in the
+-- final report as a tracked action item rather than being silently skipped.
+CREATE OR REPLACE PROCEDURE lab_optional(
+  p_module    IN VARCHAR2,
+  p_test_name IN VARCHAR2,
+  p_obj_name  IN VARCHAR2,
+  p_condition IN BOOLEAN,
+  p_detail    IN VARCHAR2 DEFAULT NULL
+) IS
+  v_cnt NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_cnt
+  FROM user_objects WHERE object_name = UPPER(p_obj_name);
+
+  IF v_cnt = 0 THEN
+    INSERT INTO lab_results(module_name, test_name, status, detail)
+    VALUES (p_module, p_test_name, 'MANUAL',
+            'Recommended object ' || UPPER(p_obj_name) ||
+            ' is not present. Add it per the module guidance and rerun.');
+  ELSE
+    INSERT INTO lab_results(module_name, test_name, status, detail)
+    VALUES (p_module, p_test_name,
+            CASE WHEN p_condition THEN 'PASS' ELSE 'FAIL' END,
+            p_detail);
+  END IF;
+  COMMIT;
+END;
+/
+
 DECLARE
   v_missing VARCHAR2(4000) := NULL;
 
