@@ -8,18 +8,27 @@
 kaggle.json
 ~/.kaggle/kaggle.json
 
-# Oracle wallet and credentials
+# Oracle wallet, TLS config, and credentials
 **/Wallet_*.zip
 **/wallet/
+**/wallet_*/
 **/*.sso
 **/*.pem
+**/*.p12
+**/*.env
+**/*.ora
 .env
 
 # Python
 __pycache__/
 *.pyc
+.venv/
+venv/
 
 # OS/editor
 .DS_Store
 .vscode/
 .idea/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
