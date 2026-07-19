@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/lib/require_venv.sh"
+require_demo_venv
+
 # Installs Kaggle CLI and validates ~/.kaggle/kaggle.json permissions.
-python3 -m pip install --upgrade pip
-python3 -m pip install kaggle
+python -m pip install --upgrade pip
+python -m pip install kaggle
 
 echo "Ensure Kaggle API key exists at ~/.kaggle/kaggle.json"
 echo "1) Create API token in Kaggle account settings"

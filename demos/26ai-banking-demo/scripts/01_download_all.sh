@@ -2,6 +2,10 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "${ROOT_DIR}/scripts/lib/require_venv.sh"
+require_demo_venv
+
 RAW_DIR="${ROOT_DIR}/data/raw"
 mkdir -p "${RAW_DIR}" "${ROOT_DIR}/data/processed"
 

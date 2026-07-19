@@ -5,6 +5,10 @@ set -euo pipefail
 # Requires OCI CLI auth configured: oci setup config
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "${ROOT_DIR}/scripts/lib/require_venv.sh"
+require_demo_venv
+
 DATA_DIR="${ROOT_DIR}/data"
 : "${OCI_BUCKET_NAME:?Set OCI_BUCKET_NAME}"
 : "${OCI_NAMESPACE:?Set OCI_NAMESPACE}"

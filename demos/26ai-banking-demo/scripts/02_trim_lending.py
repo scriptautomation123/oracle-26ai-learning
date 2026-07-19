@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
 import pandas as pd
 
 KEEP_COLUMNS = [
@@ -23,7 +24,19 @@ KEEP_COLUMNS = [
 ]
 
 
+def require_demo_venv() -> None:
+    expected = Path(__file__).resolve().parent.parent / ".venv"
+    active = Path(sys.prefix).resolve()
+    if active != expected.resolve():
+        raise SystemExit(
+            "ERROR: .venv is not active for this demo. "
+            "Run: source scripts/00_setup_venv.sh"
+        )
+
+
 def main() -> None:
+    require_demo_venv()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True, help="Path to raw LendingClub CSV")
     parser.add_argument("--output", required=True, help="Path to trimmed CSV")
