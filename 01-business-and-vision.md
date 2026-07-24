@@ -1,10 +1,9 @@
 # Business Vision: Proactive Banking Nudges on Oracle 26ai
+ m
 
-This chapter is the business-facing explanation of the banking demo. It is intentionally long-form. The purpose is to show why the system exists, which moments matter, and how the design stays tied to the bank's existing systems of record instead of inventing a separate AI island.
+## Why
 
-## Why the bank is building this
-
-The bank wants to act while customer intent is still live. That means the decision has to happen in the same session window, with the same customer context, and with the same data the bank already trusts.
+act while customer intent is still live. That means the decision has to happen in the same session window, with the same customer context, and with the same data the bank already trusts.
 
 The three moments that matter are:
 
@@ -14,9 +13,7 @@ The three moments that matter are:
 
 Each of these moments has different operational constraints, but the shared goal is the same: produce a timely nudge from the bank's own data without moving that data into another system.
 
-## Banking outcomes this demo is designed to improve
-
-The banking side is not background context. It is the operating objective.
+## Banking outcomes 
 
 - Improve decision timeliness while the customer is still in-session.
 - Improve product-fit quality by combining eligibility rules with behavioral context.
@@ -25,9 +22,9 @@ The banking side is not background context. It is the operating objective.
 
 The design assumes the bank already has system-of-record data and strict controls. This demo focuses on improving action quality without weakening those controls.
 
-## Marketing outcomes this demo is designed to improve
+## marketing
 
-Marketing is also a core objective, not a side effect.
+Marketing
 
 - Increase contextual relevance for card and loan nudges during high-intent moments.
 - Recover abandoned applications with tailored objection-handling prompts.
@@ -40,15 +37,11 @@ In this model, marketing effectiveness is achieved through controlled personaliz
 
 This is not a separate vector database project.
 
-It is not a graph migration.
 
-It is not an agent demo that writes arbitrary SQL.
-
-It is not a marketing-content toy.
 
 It is a converged Oracle Database 26ai implementation that uses relational rows, vectors, graph traversal, governed generation, and policy-wrapped tools to support regulated customer communications.
 
-## The customer moments in plain language
+## The customer moments
 
 ### Credit card page view
 
