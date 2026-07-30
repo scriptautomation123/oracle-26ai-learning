@@ -48,58 +48,8 @@ From an enterprise security perspective, exposing the base `CUSTOMER` table intr
 |  |  |
 |--|--|
 |  |  |
-**Architectural Component**
 
-**Prototype Notebook Implementation**
-
-**Production Corrected Implementation**
-
-**Operational Impact**
-
-ONNX Model Import
-
-Unnamed positional syntax via `DBMS_VECTOR.LOAD_ONNX_MODEL`
-
-[cite: 1]
-
-Explicit named parameters with JSON tensor mapping (`directory`, `file_name`, `model_name`, `metadata`)
-
-Prevents PL/SQL execution errors across Oracle 23ai/26ai patch sets.
-
-Vector Metric Alignment
-
-`DISTANCE COSINE` index; manual SQL checks
-
-Enforced `COSINE` operator in query predicates with baseline execution plan checks
-
-Guarantees ANN vector index utilization; prevents full table scans.
-
-SQL/PGQ Graph Indexing
-
-Graph defined over base relational tables
-
-Compulsory non-unique B-tree indexes on all `SOURCE KEY` and `DESTINATION KEY` columns
-
-Maintains single-digit millisecond latency during multi-hop peer traversals.
-
-Schema Metadata Exposure
-
-Direct exposure of `CUSTOMER` table to `DBMS_CLOUD_AI`
-
-[cite: 1]
-
-Exposure restricted to least-privilege reporting views omitting personal identifiers
-
-Eliminates NPI leakage during LLM context grounding and prompt construction.
-
-MCP Execution Interface
-
-Interactive SQLcl `-mcp` listener running as privileged user
-
-Autonomous MCP daemon operating under dedicated `NUDGE_AGENT` user with restricted grants
-
-Restricts agent actions to audited PL/SQL wrapper procedures
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU5MjM5NTE0MCwtMTY1NTU2OTY3OV19
+eyJoaXN0b3J5IjpbMTgyMzkxMTA1OSwtMTY1NTU2OTY3OV19
 -->
