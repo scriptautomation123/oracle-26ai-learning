@@ -12,7 +12,28 @@ An exhaustive technical evaluation of the notebook confirms that its core concep
 
 A "nudge" in a retail or commercial banking environment is legally classified as a regulated communication. Whether delivering an introductory annual percentage rate (APR) offer for a credit card, recovering an abandoned loan application, or providing real-time servicing following a declined point-of-sale transaction, generated messages are subject to federal and state statutory frameworks. Generative AI utilities cannot operate as autonomous decisioning engines; they must act as strictly bounded phrasing modules subject to deterministic eligibility rules, suppression filters, frequency caps, and static disclosure substitution mechanisms.
 
+## Technical Review and Correctness Corrections
+
+A thorough review of the database objects, SQL operators, and PL/SQL package calls within the training notebook yields several key technical findings across syntax compatibility, execution paths, and performance optimization.
+
+### In-Database ONNX Model Loading and Vector Operations
+
+The notebook demonstrates loading an Open Neural Network Exchange (ONNX) embedding model (`all_MiniLM_L6_v2.onnx`) directly into the database kernel using `DBMS_VECTOR.LOAD_ONNX_MODEL`. In Oracle 23ai and 26ai, loading an in-database ONNX model translates text strings directly into `VECTOR(384, FLOAT32)` representations without invoking external REST endpoints or transmitting customer transcripts outside the database boundary.
+
+The signature used in the training notebook relies on positional parameters or simplified helper calls. In enterprise PL/SQL deployments, named parameters must be explicitly specified to maintain forward compatibility and prevent runtime signature mismatches across minor database updates. Furthermore, the JSON metadata descriptor must explicitly map the input tensor array and output vector names.
+```
+BEGIN
+  DBMS_VECTOR.LOAD_ONNX_MODEL(
+    directory => 'DATA_PUMP_DIR',
+    file_name => 'all_MiniLM_L6_v2.onnx',
+    model_name => 'MINILM_EMB',
+    metadata => JSON('{"function":"embedding","embeddingOutput":"embedding","input":{"input":["DATA"]}}')
+  );
+END;
+/
+```
+
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE2NTU1Njk2NzldfQ==
+eyJoaXN0b3J5IjpbMjExMTExNjI4MCwtMTY1NTU2OTY3OV19
 -->
