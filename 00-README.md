@@ -431,7 +431,7 @@ Financial compliance requires strict adherence to all twenty governing regulator
 
 ### Unified Compliance & Quantum-Resistant Redaction Package
 
-SQL
+
 
 ```
 CREATE OR REPLACE PACKAGE BODY banking_nudge_compliance AS
@@ -578,5 +578,5 @@ ALTER SYSTEM SET PARALLEL_MAX_SERVERS = 64 SCOPE=BOTH;
     
 -   [ ] **Bias Scoring Thresholds:** Ensure PL/SQL validation stops execution if `bias_score >`
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwNDI2NTQwODksLTgzMjI3OTYxMl19
+eyJoaXN0b3J5IjpbOTcyNTY4NzUzLC04MzIyNzk2MTJdfQ==
 -->
