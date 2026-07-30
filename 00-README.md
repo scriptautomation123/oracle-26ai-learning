@@ -55,23 +55,30 @@ These are the rules that shape the design choices in every module. None of
 them is optional. Most of them apply to *both* the eligibility decision *and*
 the generated message text.
 
-| Regime | Applies to | What it forces in this stack |
-|---|---|---|
-| **UDAAP** (Dodd-Frank §1031/§1036, CFPB) | Any consumer-facing message, including LLM-generated nudges | No deceptive/abusive framing; reviewable content; reproducible record of what each customer was shown |
-| **Reg B / ECOA** | Any credit decision (Personal Loan, Cash+ Visa eligibility) | No use of protected-class attributes (race, color, religion, national origin, sex, marital status, age, public-assistance status) as features in eligibility, including via proxy or graph traversal |
-| **FCRA** | Adverse action on credit applications | Adverse-action notice with specific reasons; cannot use a black-box LLM rationale; must be derivable from inputs |
-| **Reg Z (TILA)** | Credit-card / loan offer disclosures | Cost-of-credit terms (APR, fees) shown in approved language, not paraphrased by an LLM |
-| **Reg DD (TISA)** | Deposit (Term Deposit) offer disclosures | APY and term language must match approved disclosure |
-| **Reg E** | Electronic fund transfer error/dispute messages (declined transaction servicing) | UC3 messages that resolve a declined txn are servicing, not marketing — different consent model, different retention |
-| **GLBA** | NPI (non-public personal information) | Embedding transcripts, account numbers, balances → all NPI; cannot leave the bank's controlled environment without contract; encryption at rest + in transit |
-| **TCPA / CAN-SPAM / state e-sign** | Outbound channel (SMS, email, push) | Channel-level consent + opt-out, frequency cap, quiet hours; suppression-list authoritative |
-| **GDPR / CCPA / state privacy** | EU/CA/etc. customers | Lawful basis, DSAR, right to deletion, automated decision-making disclosure |
-| **SR 11-7 / OCC 2011-12** | Any model used in a decision (embedding model, LLM, graph-based scoring) | Model inventory, validation, monitoring, change control, challenger model, documented limitations |
-| **BSA / AML** | Transaction monitoring | Don't let nudges leak SAR-related signals to the customer; declined-for-fraud messaging is constrained |
-| **PCI-DSS** | PAN, CVV, expiry | Never embed PAN; tokenize before any AI surface |
-| **NYDFS Part 500 / FFIEC** | Cybersecurity & third-party risk | LLM provider is a third party; data-flow inventory; incident reporting clock |
-| **SOX** | Financial reporting | Anything affecting revenue recognition (campaign attribution → bookings) needs ITGC controls |
-| **Records management** | Bank policy + regulator retention schedules | `AI_CALL_LOG`, prompts, outputs, eligibility snapshots are records; retention + legal hold |
+# AI in Banking (Marketing & Online Offers) — Master Regulatory Map
+
+| Regime | Applies to | What it forces in this AI stack |
+| :--- | :--- | :--- |
+| **UDAAP** *(Dodd-Frank §1031/§1036, CFPB)* | Any consumer-facing message, including LLM-generated nudges | No deceptive or abusive framing; reviewable content; reproducible record of what each customer was shown. |
+| **Reg B / ECOA** | Any credit decision (Personal Loan, Cash+ Visa eligibility) | No use of protected-class attributes as features in eligibility, including via proxy, graph traversal, or complex predictive models. |
+| **FCRA** | Adverse action on credit applications | Mandatory adverse-action notices with specific, derivable reasons; prohibits black-box LLM rationales or untraceable outputs. |
+| **CFPB AI Circulars** *(2022-03 & 2023-03)* | Complex algorithms & LLM prompts driving credit decisions/nudges | Prohibits generic sample adverse-action reasons; notices must state the *exact* factors used, including non-traditional algorithmic inputs. |
+| **Reg Z (TILA)** | Credit-card / loan offer disclosures | Cost-of-credit terms (APR, fees, promotional rates) shown in pre-approved verbatim language; **cannot be paraphrased** by an LLM. |
+| **Reg DD (TISA)** | Deposit (Term Deposit) offer disclosures | APY and term language must match approved, mandatory disclosures exactly. |
+| **Reg E** | Electronic fund transfer error/dispute messages (declined txn servicing) | Messages resolving declined transactions are servicing, not marketing—requires different consent models, quiet-hour rules, and retention schedules. |
+| **GLBA** | Non-Public Personal Information (NPI) | Embedding transcripts, account numbers, and balances are NPI; cannot leave the bank's controlled environment without strict contract; encryption at rest and in transit. |
+| **CFPB Section 1033** *(Personal Financial Data Rights)* | Open banking data fed into AI personalization/cross-selling models | Mandates consumer data access while strictly limiting the secondary use of transaction history for automated marketing without explicit, affirmative consent. |
+| **State ADMT Laws** *(e.g., CA CCPA, CO AI Act)* | Automated decision-making technology & AI profiling for offers | Requires pre-decision notices to consumers, opt-out mechanisms for automated marketing/profiling, and post-outcome explanation rights. |
+| **GDPR / CCPA / State Privacy** | EU / CA / applicable state customers | Lawful basis for processing, DSARs, right to deletion, and mandatory disclosures regarding automated decision-making. |
+| **EU AI Act** *(Reg 2024/1689)* | AI systems evaluating credit eligibility or scoring risk for EU users | Classifies credit scoring/eligibility as **High-Risk** (Annex III); mandates fundamental rights impact assessments, EU AI database registration, transparency, and human oversight. |
+| **SR 11-7 / OCC Guidance** *(Model Risk Management)* | Any model in a decision chain (embeddings, LLMs, scoring engines) | Model inventory, validation, ongoing monitoring, change controls, challenger models, and documented limitations. |
+| **NIST AI RMF 1.0** *(SR 11-7 AI Extension)* | Generative LLMs, RAG pipelines, and prompt architectures | Operational controls specifically targeting non-deterministic LLM behaviors: hallucination guardrails, prompt injection defenses, and real-time output monitoring. |
+| **2023 Interagency Third-Party Guidance** | Cloud-hosted LLM providers, API endpoints, SaaS vendors | Evaluates third-party AI vendors as high-risk; forces vendor audit rights, data sovereignty, exit strategies, and continuous operational resilience. |
+| **TCPA / CAN-SPAM / State e-Sign** | Outbound channels (SMS, email, push notifications) | Channel-level consent + opt-out, frequency caps, quiet hours, and authoritative suppression-list management. |
+| **BSA / AML** | Transaction monitoring and fraud detection | Prevents marketing nudges from leaking SAR-related signals to customers; strict constraints on messaging for fraud-declined accounts. |
+| **PCI-DSS** | Cardholder data (PAN, CVV, Expiry) | Never embed raw PANs; must tokenize all card numbers before entering any prompt context or AI surface. |
+| **NYDFS Part 500 / FFIEC** | Cybersecurity & third-party risk management | AI vendor data-flow mapping, strict incident reporting clocks, and real-time anomaly detection. |
+| **SOX** | Financial reporting and revenue attribution | Anything affecting campaign attribution or bookings requires IT General Controls (ITGC) and auditable lineage. |
 
 Each module flags which of these regimes shape the design choice it describes.
 
