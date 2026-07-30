@@ -45,11 +45,8 @@ The natural language generation pipeline utilizes `DBMS_CLOUD_AI.CREATE_PROFILE`
 
 From an enterprise security perspective, exposing the base `CUSTOMER` table introduces compliance risks if columns such as `full_name`, social security numbers, or tax identifiers are accessible. The `object_list` must point to database views that project only necessary business identifiers (`customer_id`, `segment`).
 
-|  |  |
-|--|--|
-|  |  |
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTgyMzkxMTA1OSwtMTY1NTU2OTY3OV19
+eyJoaXN0b3J5IjpbLTQ1MjkxNTg1NywtMTY1NTU2OTY3OV19
 -->
