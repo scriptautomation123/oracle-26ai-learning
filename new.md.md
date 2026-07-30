@@ -604,8 +604,58 @@ Applying this formula to a production corpus of 2,000,000 vectors across 384 dim
 
 Choosing between Inverted File (`IVF`) and Hierarchical Navigable Small World (`HNSW`) vector indexes involves tradeoffs between memory utilization, build latency, and recall accuracy.
 
+Updated todo list
+
+| Operational Metric | Inverted File (IVF / `NEIGHBOR PARTITIONS`) | Navigable Small World (HNSW / `INMEMORY NEIGHBOR GRAPH`) |
+|---|---|---|
+| Memory Footprint | Low; resides primarily on disk segments and standard buffer cache. | High; requires contiguous allocation in System Global Area (SGA) Vector Pool. |
+| Build Latency | Fast; partitions vector space into discrete centroid clusters. | Slower; constructs multi-layer graph networks connecting nearest neighbors. |
+| Filtered Search Efficiency | Excellent when combined with highly selective SQL relational predicates. | Degrades if heavy pre-filtering invalidates graph routing paths. |
+| Recall @ K Performance | High (90% – 95% with target accuracy tuning). | Exceptional (98% – 99%+). |
+| Target Banking Use Case | UC1 & UC2: Ideal for high-cardinality, multi-tenant datasets filtered by `customer_id`. | UC3: Ideal for ultra-low latency, unfiltered top-K similarity matching. |
+
+### Observability, Performance Tuning, and Model Risk (SR 11-7)
+
+Monitoring converged workloads requires tracking both standard database execution metrics and AI-specific indicators. Database administrators must regularly inspect cursor execution plans using `DBMS_XPLAN` to confirm vector index activation:
+
+SQL
+
+```
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR(format => 'ALLSTATS LAST'));
+
+```
+
+The execution plan must explicitly contain `VECTOR INDEX SCAN (APPROXIMATE)`. If `TABLE ACCESS FULL` appears on `CONVERSATION_CHUNK`, the optimizer has rejected the index, leading to query degradation. SQL Plan Baselines (`DBMS_SPM`) must be captured for canonical queries across all three use cases to lock in optimal execution strategies.
+
+To fulfill Model Risk Management requirements under SR 11-7, the embedding pipeline must undergo daily accuracy testing. An automated batch job executes a set of benchmark query strings against `CONVERSATION_CHUNK`, comparing approximate nearest-neighbor results from the vector index against exact brute-force cosine distances calculated without an index. If recall@K drops below $90\%$, an alert triggers, signaling vector index degradation or embedding drift.
+
+Batch re-embedding jobs or runaway LLM queries must not starve core online transaction processing (OLTP) activity. The database Resource Manager confines background AI processing to dedicated consumer groups:
+
+SQL
+
+```
+BEGIN
+  DBMS_RESOURCE_MANAGER.CREATE_CONSUMER_GROUP(
+    consumer_group => 'NUDGE_AI_BATCH_CG',
+    comment => 'Resource group for vector embedding and batch AI generation'
+  );
+  DBMS_RESOURCE_MANAGER.CREATE_PLAN_DIRECTIVE(
+    plan => 'DEFAULT_PLAN',
+    group_or_subplan => 'NUDGE_AI_BATCH_CG',
+    mgmt_p1 => 10,  -- Cap CPU utilization to max 10% during peak hours
+    switch_group => 'CANCEL_SQL',
+    switch_time => 15 -- Terminate queries exceeding 15s execution time
+  );
+END;
+/
+
+```
+
+### Launch-Readiness Sign-Off Matrix
+
+Before deploying proactive nudges to production, all operational and regulatory readiness criteria must be satisfied:
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE5OTU3MDY2MTUsLTQ1MjkxNTg1NywtMT
-Y1NTU2OTY3OV19
+eyJoaXN0b3J5IjpbMTIwMjYyNTA3MCwtNDUyOTE1ODU3LC0xNj
+U1NTY5Njc5XX0=
 -->
