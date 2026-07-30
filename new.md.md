@@ -46,7 +46,26 @@ The natural language generation pipeline utilizes `DBMS_CLOUD_AI.CREATE_PROFILE`
 From an enterprise security perspective, exposing the base `CUSTOMER` table introduces compliance risks if columns such as `full_name`, social security numbers, or tax identifiers are accessible. The `object_list` must point to database views that project only necessary business identifiers (`customer_id`, `segment`).
 
 
+Updated todo list
 
+| Architectural Component | Prototype Notebook Implementation | Production Corrected Implementation | Operational Impact |
+|---|---|---|---|
+| ONNX Model Import | Unnamed positional syntax via `DBMS_VECTOR.LOAD_ONNX_MODEL` [cite: 1] | Explicit named parameters with JSON tensor mapping: `directory, file_name, model_name, metadata` | Prevents PL/SQL execution errors across Oracle 23ai/26ai patch sets. |
+| Vector Metric Alignment | `DISTANCE COSINE` index; manual SQL checks | Enforced `COSINE` operator in query predicates with baseline execution plan checks | Guarantees ANN vector index utilization; prevents full table scans. |
+| SQL/PGQ Graph Indexing | Graph defined over base relational tables | Compulsory non-unique B-tree indexes on all `SOURCE_KEY` and `DESTINATION_KEY` columns | Maintains single-digit millisecond latency during multi-hop peer traversals. |
+| Schema Metadata Exposure | Direct exposure of `CUSTOMER` table to `DBMS_CLOUD_AI` [cite: 1] | Exposure restricted to least-privilege reporting views omitting personal identifiers | Eliminates NPI leakage during LLM context grounding and prompt construction. |
+| MCP Execution Interface | Interactive `SQLcl -mcp` listener running as privileged user | Autonomous MCP daemon operating under dedicated `NUDGE_AGENT` user with restricted grants | Restricts agent actions to audited PL/SQL wrapper procedures. |
+
+## Banking Regulatory and Compliance Governance Framework
+
+Deploying artificial intelligence within consumer banking workflows requires navigating overlapping regulatory regimes. Every automated interaction must maintain an auditable record tracing eligibility, data retrieval, model execution, policy suppression, and disclosure rendering.
+
+The governance execution sequence begins with a trigger event, such as a product page view, an abandoned credit application, or a declined electronic transaction. The engine evaluates deterministic eligibility criteria, checks suppression tables, and applies channel frequency caps. Once cleared, context retrieval pulls look-alike candidate sets via `SQL/PGQ` traversals, fetches relevant historical transcripts using vector distance matching, and retrieves account facts from core relational tables. The prompt generation engine crafts the response using pre-approved templates, executes post-generation disclosure substitution to inject verified statutory language, routes sampled outputs to human review queues, and records complete event metadata across immutable audit tables before dispatching the message to the customer.
+
+### Statutory Framework Mapping
+
+The architecture directly addresses key statutory requirements through database-level controls:
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ1MjkxNTg1NywtMTY1NTU2OTY3OV19
+eyJoaXN0b3J5IjpbMTQwODU5NDUzMiwtNDUyOTE1ODU3LC0xNj
+U1NTY5Njc5XX0=
 -->
