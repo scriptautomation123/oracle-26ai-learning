@@ -65,7 +65,28 @@ The governance execution sequence begins with a trigger event, such as a product
 ### Statutory Framework Mapping
 
 The architecture directly addresses key statutory requirements through database-level controls:
+
+| Statutory Regime | Scope of Application | Architectural Control in Oracle 26ai |
+|---|---|---|
+| UDAAP (Dodd-Frank Act Title X) | All consumer-facing marketing and servicing messages | Human review queues (`UDAAP_REVIEW_QUEUE`), deterministic template substitution, and immutable text logging (`AI_CALL_LOG`). |
+| Equal Credit Opportunity Act (ECOA) / Reg B | Credit card and personal loan eligibility decisioning | Complete exclusion of protected-class characteristics or demographic proxies in `SQL/PGQ` graph traversals and eligibility rules. |
+| Fair Credit Reporting Act (FCRA) | Credit application declines or adverse actions | Strict prohibition of LLM-generated explanations for adverse decisions; reliance on deterministic, pre-approved reason codes. |
+| Truth in Lending (Reg Z) / Truth in Savings (Reg DD) | Marketing and promotional disclosures (APR, APY, fees) | Mandatory post-generation text processing that replaces LLM tokens with static, legal-approved disclosure blocks (`APPROVED_DISCLOSURES`). |
+| Electronic Fund Transfer Act (Reg E) | Servicing notifications following declined electronic transactions | Formal classification of Use Case 3 as a servicing transaction, bypassing marketing suppression filters while respecting channel consent. |
+| Gramm-Leach-Bliley Act (GLBA) & PCI-DSS | Non-public Personal Information (NPI) and cardholder data protection | In-database ONNX vector generation ensuring zero transcript data leaves the Autonomous Database (ADB) perimeter; TDE encryption at rest. |
+| Telephone Consumer Protection Act (TCPA) / CAN-Spam | Outbound messaging across SMS, Push, and Email channels | Automated policy queries (`OFFER_SUPPRESSION`, `DO_NOT_CONTACT`, `MARKETING_POLICY`) validating opt-in status, rolling frequency caps, and quiet hours. |
+| SR 11-7 / OCC 2011-12 | Model Risk Management for embedding models and LLMs | Formal model inventory registration, ONNX binary checksum verification, and daily recall canary testing against ground-truth datasets. |
+
+### Fair Lending Guardrails in Graph and Vector Traversal
+
+Under Reg B and ECOA, utilizing peer data to influence credit product marketing must be carefully governed to avoid discriminatory outcomes. The `SQL/PGQ` traversal pattern deployed in Use Case 1 links customers based purely on product interaction history (`viewed` edges):
+
+```
+MATCH (c1 IS customer)-[:viewed]->(p IS product)<-[:viewed]-(c2 IS customer)-[:viewed]->(p2 IS product)
+```
+
+This traversal pattern is symmetric and relies exclusively on behavioral interaction vectors. The graph definition explicitly excludes demographic indicators, income tiers, geographic zip codes, or age brackets. If an enterprise introduces demographic attributes into graph nodes, the resulting candidate sets risk generating disparate impact across protected classes. Furthermore, graph outputs must strictly serve candidate discovery for marketing visibility; actual credit extension must be governed by transparent, deterministic credit scoring pipelines.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQwODU5NDUzMiwtNDUyOTE1ODU3LC0xNj
-U1NTY5Njc5XX0=
+eyJoaXN0b3J5IjpbMjg5MTA4MzMsLTQ1MjkxNTg1NywtMTY1NT
+U2OTY3OV19
 -->
